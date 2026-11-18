@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ระบบเช็คชื่อ ม.2/16</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f6;--card:#fff;--tx:#14232d;--mut:#6b7a86;--line:#e3e9ec;--nv:#0e3b43;--ac:#0e3b43;--br:#b08d57;--p:#2e8b6a;--a:#b8404a;--s:#c98a1b;--l:#7a5bb5;--t:#2c86a8;--serif:"Noto Serif Thai","Sarabun",serif;--sh:0 1px 2px rgba(20,35,45,.05),0 10px 28px -14px rgba(20,35,45,.18);color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1216;--card:#121c22;--tx:#e8eef1;--mut:#8fa0ab;--line:#22313a;--nv:#0a2a30;--ac:#2f8f9d;--br:#d0ae78;--p:#3fb68f;--a:#e0646e;--s:#e5a63a;--l:#a68be0;--t:#4fb2d6;--sh:0 1px 2px rgba(0,0,0,.3);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 Sarabun,"Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--br);outline-offset:2px}
+header{background:linear-gradient(165deg,#12505a,var(--nv) 70%);color:#fff;padding:calc(16px + env(safe-area-inset-top)) 18px 4px;border-radius:0 0 24px 24px;box-shadow:0 12px 30px -18px rgba(10,42,48,.7)}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+header h1{margin:0;font:600 22px/1.2 var(--serif);letter-spacing:.01em}
+header small{display:block;font-size:12px;color:#fff;opacity:.72;margin-top:3px}
+#sy{background:rgba(255,255,255,.12);border-radius:99px;padding:3px 10px;opacity:1;margin:0;white-space:nowrap}
+.tabs{display:flex;gap:2px;background:rgba(255,255,255,.1);border-radius:13px;padding:3px;margin:16px 0 14px}
+.tabs button{flex:1;background:none;border:0;border-radius:10px;color:#cfe0e3;padding:8px 0;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
+.tabs .on{background:#fff;color:var(--nv);box-shadow:0 2px 8px -2px rgba(0,0,0,.3)}
+main{max-width:760px;margin:0 auto;padding:16px 14px calc(36px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px;box-shadow:var(--sh)}
+.nav{display:flex;gap:8px;align-items:center}.nav .t{flex:1;text-align:center;font:600 17px var(--serif)}
+.b{background:var(--card);border:1px solid var(--line);border-radius:10px;min-height:40px;padding:0 14px;cursor:pointer;font-weight:600;transition:transform .1s}
+.b:active,.ar:active,.c:active{transform:scale(.96)}
+.b.pr{background:var(--ac);border-color:var(--ac);color:#fff}
+input[type=date]{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.hero{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;row-gap:10px;padding:14px 12px}
+.ar{height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);font-size:22px;line-height:1;cursor:pointer;color:var(--mut)}
+.hc{display:flex;gap:14px;justify-content:center;align-items:center}
+.big{font:600 56px/1 var(--serif);color:var(--nv)}
+@media(prefers-color-scheme:dark){.big{color:var(--tx)}}
+.hm b{display:block;font:600 18px var(--serif)}.hm span{color:var(--mut);font-size:14px}
+.hs,.tools{grid-column:1/-1}
+.hs{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:10px;font-weight:600}
+.hs i{font-style:normal;color:var(--br);font-weight:600}
+.tools{display:flex;justify-content:space-between;gap:8px}
+.chips{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 12px;margin:0 -2px;position:relative;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;min-width:104px;scroll-snap-align:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px;cursor:pointer;text-align:left;line-height:1.3}
+.chip b{display:block;font-size:12px;color:var(--mut);font-weight:600}.chip span{display:block;font-weight:600;font-size:14px}.chip i{display:block;font-size:11px;color:var(--mut);font-style:normal}
+.chip.on{background:var(--ac);border-color:var(--ac);box-shadow:inset 0 3px 0 var(--br)}.chip.on *{color:#fff}
+.sum{display:grid;grid-template-columns:repeat(6,1fr);text-align:center}
+.sum div{border-left:1px solid var(--line)}.sum div:first-child{border:0}
+.sum b{display:block;font:600 24px/1.2 var(--serif)}.sum span{font-size:11px;color:var(--mut)}
+.sum .p b{color:var(--p)}.sum .a b{color:var(--a)}.sum .s b{color:var(--s)}.sum .l b{color:var(--l)}.sum .t b{color:var(--t)}.sum .u b{color:var(--mut)}
+.bar{display:flex;gap:8px;margin-top:12px}.bar .b{flex:1}
+.list{padding:0;overflow:hidden}
+.row{display:grid;grid-template-columns:26px 1fr repeat(5,36px);gap:4px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row.h{font-size:11px;color:var(--mut);font-weight:600;text-align:center;background:var(--bg)}
+.no{font:12px var(--serif);color:var(--mut);text-align:right}.nm{font-size:14px;line-height:1.25;font-weight:500}
+.c{height:32px;border:1px solid var(--line);background:transparent;color:var(--mut);border-radius:9px;font-size:12px;padding:0;cursor:pointer;transition:background .15s,transform .1s}
+.c.on{color:#fff;border-color:transparent;font-weight:600;box-shadow:0 3px 8px -3px rgba(0,0,0,.4)}
+.c.on.p{background:var(--p)}.c.on.a{background:var(--a)}.c.on.s{background:var(--s)}.c.on.l{background:var(--l)}.c.on.t{background:var(--t)}
+textarea{width:100%;min-height:300px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:8px;line-height:1.6;resize:vertical}
+.sc{overflow-x:auto;margin-top:6px}table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+th{font-size:12px;font-weight:600;color:var(--mut)}.n{text-align:left}
+th.p{color:var(--p)}th.a{color:var(--a)}th.s{color:var(--s)}th.l{color:var(--l)}th.t{color:var(--t)}
+.bad{color:var(--a);font-weight:700}.ok{color:var(--p);font-weight:700}.mu{color:var(--mut);font-size:12px}
+.card>b{font:600 16px var(--serif)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.ch{text-align:center;font-size:12px;color:var(--mut);padding-bottom:2px}
+.cd{aspect-ratio:1;background:var(--bg);border:1px solid transparent;border-radius:11px;padding:4px 6px;text-align:left;position:relative;cursor:pointer;font:500 14px var(--serif)}
+.cd.td{border:1.5px solid var(--br)}
+.cd i{position:absolute;right:4px;bottom:4px;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;font:700 11px Sarabun,sans-serif;font-style:normal;padding:0 4px}
+.cd i.bad{background:var(--a);color:#fff}.cd i.ok{background:var(--p);color:#fff}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.mt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;text-align:left;box-shadow:var(--sh)}
+.mt b{display:block;font-size:13px;color:var(--mut)}.mt span{font:600 26px/1.3 var(--serif);display:block}.mt i{font-size:11px;color:var(--mut);font-style:normal}
+.pb{height:4px;background:var(--line);border-radius:2px;margin:6px 0;overflow:hidden}.pb u{display:block;height:100%;background:var(--br)}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--nv);color:#fff;padding:9px 18px;border-radius:99px;opacity:0;transition:opacity .2s;pointer-events:none;box-shadow:0 8px 24px -8px rgba(0,0,0,.5)}
+.toast.show{opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="hd"><div><h1>เช็คชื่อ ม.2/16</h1><small>โรงเรียนอำนาจเจริญ · ปีการศึกษา 2569</small></div><small id="sy"></small></div>
+<div class="tabs"><button data-v="day">วัน</button><button data-v="week">สัปดาห์</button><button data-v="month">เดือน</button><button data-v="year">ปี</button></div></header>
+<main id="v"></main>
+<div class="toast" id="ts"></div>
+<script>
+// ตั้งค่า: วาง URL ของ Google Apps Script (ลงท้ายด้วย /exec) ที่นี่ ถ้าเว้นว่างจะเก็บข้อมูลในเครื่องนี้เครื่องเดียว
+const CFG={API:"",PIN:""};
+const ST=[["p","มา","✅"],["a","ขาด","❌"],["s","ป่วย","🤒"],["l","ลา","📝"],["t","สาย","⏰"]],IC={};ST.forEach(s=>IC[s[0]]=s[2]);
+const N=["กฤษณะ โลหะสาร","กัมปนาท พิมสวัสดิ์","กาญจน์รดา สินชู","คณิน เพียราช","คณิศร สามารถ","จักรพงษ์ ทองสอาด","เฉลิมเดช วรรณกาล","ชนกเนตร แก้วอ่อน","ชยากร ชูปวา","ชลพรรษา คณะชัย","ฐานทัพ แก้วใส","ณัญวรรณ กาสุข","ครองขวัญ สุตั่น","เตชินธุ์ หาญวงค์","ทิตติพร กิจช่วย","ธนพล มารัตน์","ธนากร อ่อนชาติ","ธามาภา เหมือนแก้ว","ธีรวัฒน์ แน่นอุดร","นฤมล จันทะพันธ์","นัฐพงศ์ วันโสภา","ปฏิมาภรณ์ โลหะสาร","ปรวัตร ปรากฏ","พรกรัณย์ จำนงค์","พัชรพร คัทนศรี","ภัทรดนัย ภาประจง","ภูมินันท์ ศิริรัตนภูมิ","เมสิณี ธิสาชัย","วโรดม บู่ทอง","วีรยา หอมเมือง","สงกรานต์ ศาสตราชัย","สุธีรา บุญหนา","สุนิษา เข็มแก้ว","สุภัทรดา ไตรตะลา","อนาวิน พานิชเจริญ","อัญญารินทร์ กลั่นจันทร์","ปัณณวัฒน์ แสงแดง","วริศรา เกิดสุข","พิชญ์สินี เครือเข้า","กชพรรณ มีธรรม","ณัชชา บ้านเวียง","รุ่งฤดี ทานะกาศ","กนกพร หลักทอง"];
+const TM=["07:40–08:30","08:30–09:20","09:20–10:10","10:10–11:00","11:00–11:50","11:50–12:40","12:40–13:30","13:30–14:20","14:20–15:10","15:10–16:00"];
+const X="เข้าแถว",K="ค้นคว้าอิสระ",SC="วิทยาศาสตร์",MA="คณิตศาสตร์",MP="คณิตศาสตร์เพิ่มเติม",TH_="ภาษาไทย",EN="ภาษาอังกฤษ",SO="สังคมศึกษา";
+const TT={1:{0:X,1:SC,2:SC,3:"การงานอาชีพ",5:MP,6:MA,7:K,8:"ประวัติศาสตร์",9:K},2:{0:X,1:"โฮมรูม",2:"โครงงานวิทยาศาสตร์",3:"โครงงานวิทยาศาสตร์",5:K,6:TH_,7:MA,8:"แนะแนว",9:K},3:{0:X,1:MP,2:SO,3:"ต้านทุจริต",5:K,6:EN,7:TH_,8:EN,9:"กิจกรรมบังคับ"},4:{0:X,1:EN,2:TH_,3:EN,5:K,6:"เทคโนโลยี",7:SO,8:"พละศึกษา",9:"กิจกรรมชุมนุม"},5:{0:X,1:SC,2:MA,3:"สุขศึกษา",5:EN,6:SO,7:"ดนตรี",8:"ดนตรี",9:K}};
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),P=s=>new Date(s+"T00:00:00");
+const add=(s,n)=>{const d=P(s);d.setDate(d.getDate()+n);return iso(d)},mon=s=>add(s,-((P(s).getDay()+6)%7));
+const TH=(s,o)=>P(s).toLocaleDateString("th-TH",o),esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const DL={weekday:"long",day:"numeric",month:"short",year:"numeric"};
+let db={},S={v:"day",d:iso(new Date()),p:1,arm:0},pend=0,tok=0;
+try{if(!CFG.API)db=JSON.parse(localStorage.getItem("att")||"{}")}catch(e){}
+const sync=t=>{$("#sy").textContent=t};
+function toast(t){const e=$("#ts");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1600)}
+function slots(d){const t=TT[P(d).getDay()]||{},has=Object.keys(t).length,o=[];for(let p=0;p<10;p++){if(p==4)continue;const s=t[p];if(has&&!s)continue;o.push({p:p,s:s||"",t:TM[p]})}return o}
+const cur=()=>slots(S.d).find(s=>s.p===S.p)||{p:S.p,s:"",t:TM[S.p]};
+function pickP(){const sl=slots(S.d),now=new Date();S.p=(sl.find(s=>s.p>0)||sl[0]).p;if(S.d===iso(now)){const m=now.getHours()*60+now.getMinutes();sl.forEach(s=>{const r=s.t.split("–").map(x=>{const q=x.split(":");return+q[0]*60+ +q[1]});if(m>=r[0]&&m<r[1])S.p=s.p})}}
+const g=(d,p)=>(db[d]&&db[d][p])||{};
+function put(d,p,n,c){db[d]=db[d]||{};db[d][p]=db[d][p]||{};if(c)db[d][p][n]=c;else delete db[d][p][n]}
+function save(items){items.forEach(x=>put(x.d,x.p,x.n,x.c));
+  if(CFG.API){pend++;sync("กำลังบันทึก…");fetch(CFG.API,{method:"POST",body:JSON.stringify({pin:CFG.PIN,items:items})}).then(()=>sync("🟢 ซิงก์แล้ว")).catch(()=>sync("⚠️ บันทึกไม่สำเร็จ")).finally(()=>pend--)}
+  else try{localStorage.setItem("att",JSON.stringify(db))}catch(e){}}
+function rng(){const x=P(S.d),y=x.getFullYear(),m=x.getMonth();if(S.v==="day")return[S.d,S.d,0];if(S.v==="week"){const a=mon(S.d);return[a,add(a,6),1]}if(S.v==="month")return[iso(new Date(y,m,1)),iso(new Date(y,m+1,0)),1];return[y+"-01-01",y+"-12-31",1]}
+async function load(q,chg){const r=rng(),t=++tok;if(!q)draw();if(!CFG.API)return;if(!q)sync("กำลังโหลด…");
+  try{const res=await fetch(CFG.API+"?pin="+encodeURIComponent(CFG.PIN)+"&from="+r[0]+"&to="+r[1]+(r[2]?"&agg=1":"")),j=await res.json();if(t!==tok||pend)return;
+    for(let d=r[0];d<=r[1];d=add(d,1))delete db[d];j.forEach(x=>put(x[0],x[1],x[2],x[3]));sync("🟢 ซิงก์แล้ว");if(!q||chg())draw()}catch(e){sync("⚠️ เชื่อมต่อไม่ได้")}}
+const PR=["a","s","l","t","p"];
+function dayStat(d,n){const m=db[d];if(!m)return null;let b=null,bi=9;for(const p in m){const c=m[p][n];if(!c)continue;const i=PR.indexOf(c);if(i<bi){bi=i;b=c}}return b}
+const dayChecked=d=>Object.values(db[d]||{}).some(o=>Object.keys(o).length>0);
+const away=(d,n)=>{const c=dayStat(d,n);return c==="a"||c==="s"||c==="l"};
+function report(a,b){const days=[];for(let d=a;d<=b;d=add(d,1))if(dayChecked(d))days.push(d);
+  return{days:days,R:N.map((nm,i)=>{const c={p:0,a:0,s:0,l:0,t:0};days.forEach(d=>{const s=dayStat(d,i+1);if(s)c[s]++});const tot=c.p+c.a+c.s+c.l+c.t;return{n:i+1,nm:nm,c:c,tot:tot,pc:tot?Math.round((c.p+c.t)/tot*100):null}})}}
+function rep(a,b,t){const r=report(a,b);return'<div class="card"><b>'+t+'</b> <span class="mu">(เช็คแล้ว '+r.days.length+' วัน · % = มา+สาย)</span><div class="sc"><table><tr><th>#</th><th class="n">ชื่อ</th>'+ST.map(s=>'<th class="'+s[0]+'">'+s[1]+'</th>').join("")+'<th>%</th></tr>'+r.R.map(s=>'<tr><td>'+s.n+'</td><td class="n">'+s.nm+'</td>'+ST.map(x=>'<td>'+(s.c[x[0]]||"")+'</td>').join("")+'<td class="'+(s.pc!==null&&s.pc<80?"bad":"")+'">'+(s.pc===null?"–":s.pc+"%")+'</td></tr>').join("")+'</table></div></div>'}
+const nav=(t,dt)=>'<div class="card nav"><button class="b" data-a="prev">‹</button><div class="t">'+t+(dt?'<br><input type="date" id="dt" value="'+S.d+'">':"")+'</div><button class="b" data-a="next">›</button><button class="b" data-a="today">วันนี้</button></div>';
+function msg(){const c=cur(),rec=g(S.d,S.p),cnt={};Object.values(rec).forEach(x=>cnt[x]=(cnt[x]||0)+1);const un=N.length-Object.keys(rec).length;
+  let t="📋 เช็คชื่อ ม.2/16 โรงเรียนอำนาจเจริญ\n"+TH(S.d,DL)+" "+(c.p?"คาบ "+c.p:"เช้า")+(c.s?" "+c.s:"")+" ("+c.t+")\n"+ST.map(s=>s[2]+" "+s[1]+" "+(cnt[s[0]]||0)).join(" | ")+(un?" | ⚪ ยังไม่เช็ค "+un:"")+"\n\nรายชื่อทั้งหมด "+N.length+" คน\n";
+  N.forEach((nm,i)=>{const x=rec[i+1];t+=(i+1)+". "+nm+" - "+(x?IC[x]+" "+ST.find(s=>s[0]===x)[1]:"⚪ ยังไม่เช็ค")+"\n"});return t}
+function hero(){const c=cur();return'<div class="card hero"><button class="ar" data-a="prev" aria-label="วันก่อนหน้า">‹</button><div class="hc"><div class="big">'+P(S.d).getDate()+'</div><div class="hm"><b>'+TH(S.d,{weekday:"long"})+'</b><span>'+TH(S.d,{month:"long",year:"numeric"})+'</span></div></div><button class="ar" data-a="next" aria-label="วันถัดไป">›</button><div class="hs"><span>'+(c.p?"คาบ "+c.p:"เช้า")+" · "+(c.s||"-")+"</span><i>"+c.t+'</i></div><div class="tools"><button class="b" data-a="today">วันนี้</button><input type="date" id="dt" value="'+S.d+'"></div></div>'}
+function vDay(){const sl=slots(S.d);if(!sl.some(s=>s.p===S.p))pickP();const rec=g(S.d,S.p),cnt={};Object.values(rec).forEach(x=>cnt[x]=(cnt[x]||0)+1);const un=N.length-Object.keys(rec).length;
+  return hero()+'<div class="chips">'+sl.map(s=>'<button class="chip'+(s.p===S.p?" on":"")+'" data-a="chip" data-p="'+s.p+'"><b>'+(s.p?"คาบ "+s.p:"เช้า")+'</b><span>'+(s.s||"-")+'</span><i>'+s.t+'</i></button>').join("")+'</div>'
+  +'<div class="card"><div class="sum">'+ST.map(s=>'<div class="'+s[0]+'"><b>'+(cnt[s[0]]||0)+"</b><span>"+s[1]+"</span></div>").join("")+'<div class="u"><b>'+un+'</b><span>ยังไม่เช็ค</span></div></div><div class="bar"><button class="b pr" data-a="all">มาทั้งหมด</button><button class="b" data-a="clr">'+(S.arm?"แตะอีกครั้งเพื่อล้าง":"ล้างคาบนี้")+'</button></div></div>'
+  +'<div class="card list"><div class="row h"><span></span><span style="text-align:left">ชื่อ-สกุล</span>'+ST.map(s=>"<span>"+s[1]+"</span>").join("")+"</div>"
+  +N.map((nm,i)=>{const n=i+1;return'<div class="row"><span class="no">'+n+'</span><span class="nm">'+nm+"</span>"+ST.map(s=>'<button class="c '+s[0]+(rec[n]===s[0]?" on":"")+'" data-a="mk" data-n="'+n+'" data-c="'+s[0]+'">'+s[1]+"</button>").join("")+"</div>"}).join("")+"</div>"
+  +'<div class="card"><b>ข้อความส่งต่อ</b><textarea id="msg" readonly>'+esc(msg())+'</textarea><div class="bar"><button class="b pr" data-a="cp">คัดลอก</button><button class="b" data-a="sh">แชร์ไป LINE / แอปอื่น</button></div></div>'}
+function vWeek(){const m=mon(S.d),ds=[0,1,2,3,4].map(i=>add(m,i));
+  return nav(TH(m,{day:"numeric",month:"short"})+" – "+TH(ds[4],{day:"numeric",month:"short",year:"numeric"}))+'<div class="card"><div class="sc"><table><tr><th>#</th><th class="n">ชื่อ</th>'+ds.map(d=>"<th>"+TH(d,{weekday:"short"})+"<br>"+P(d).getDate()+"</th>").join("")+"</tr>"
+  +N.map((nm,i)=>'<tr><td>'+(i+1)+'</td><td class="n">'+nm+"</td>"+ds.map(d=>'<td data-a="go" data-d="'+d+'" style="cursor:pointer">'+(dayChecked(d)?(IC[dayStat(d,i+1)]||"·"):'<span class="mu">–</span>')+"</td>").join("")+"</tr>").join("")
+  +'<tr><td></td><td class="n"><b>ไม่มา (ขาด/ป่วย/ลา)</b></td>'+ds.map(d=>"<td>"+(dayChecked(d)?'<b class="'+(N.some((_,k)=>away(d,k+1))?"bad":"ok")+'">'+N.filter((_,k)=>away(d,k+1)).length+"</b>":"–")+"</td>").join("")+"</tr></table></div></div>"
+  +'<div class="mu">แสดงสถานะที่หนักที่สุดของแต่ละวัน (ขาด › ป่วย › ลา › สาย › มา) แตะที่ช่องเพื่อไปแก้ไขวันนั้น</div>'}
+function vMonth(){const x=P(S.d),y=x.getFullYear(),mo=x.getMonth(),last=new Date(y,mo+1,0).getDate(),off=(new Date(y,mo,1).getDay()+6)%7,td=iso(new Date());
+  let c='<div class="cal">'+["จ","อ","พ","พฤ","ศ","ส","อา"].map(h=>'<div class="ch">'+h+"</div>").join("")+"<div></div>".repeat(off);
+  for(let i=1;i<=last;i++){const d=y+"-"+pad(mo+1)+"-"+pad(i),ck=dayChecked(d),ab=ck?N.filter((_,k)=>away(d,k+1)).length:0;c+='<button class="cd'+(d===td?" td":"")+'" data-a="go" data-d="'+d+'">'+i+(ck?'<i class="'+(ab?"bad":"ok")+'">'+(ab||"✓")+"</i>":"")+"</button>"}
+  return nav(TH(S.d,{month:"long",year:"numeric"}))+'<div class="card">'+c+'</div></div><div class="mu" style="margin-bottom:10px">ตัวเลขสีแดง = จำนวนนักเรียนที่ไม่มา · ✓ = มาครบ</div>'+rep(y+"-"+pad(mo+1)+"-01",y+"-"+pad(mo+1)+"-"+pad(last),"สรุปรายบุคคลประจำเดือน")}
+function vYear(){const y=P(S.d).getFullYear();let t="";for(let m=0;m<12;m++){const a=iso(new Date(y,m,1)),r=report(a,iso(new Date(y,m+1,0)));let at=0,tot=0;r.R.forEach(s=>{at+=s.c.p+s.c.t;tot+=s.tot});const pc=tot?Math.round(at/tot*100):null;
+  t+='<button class="mt" data-a="mon" data-d="'+a+'"><b>'+TH(a,{month:"short"})+"</b><span>"+(pc===null?"–":pc+"%")+'</span><div class="pb"><u style="width:'+(pc||0)+'%"></u></div><i>เช็คแล้ว '+r.days.length+" วัน</i></button>"}
+  return nav("พ.ศ. "+(y+543))+'<div class="grid3">'+t+"</div>"+rep(y+"-01-01",y+"-12-31","สรุปรายบุคคลทั้งปี")}
+function draw(){document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.v));$("#v").innerHTML=({day:vDay,week:vWeek,month:vMonth,year:vYear})[S.v]();const o=$(".chip.on"),r=$(".chips");if(o&&r)r.scrollLeft=o.offsetLeft-(r.clientWidth-o.clientWidth)/2}
+function mv(s){const x=P(S.d),y=x.getFullYear(),m=x.getMonth();S.d=S.v==="day"?add(S.d,s):S.v==="week"?add(S.d,7*s):S.v==="month"?iso(new Date(y,m+s,1)):iso(new Date(y+s,0,1));pickP()}
+function cp(){const t=$("#msg").value;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast("คัดลอกแล้ว")).catch(()=>{$("#msg").select();try{document.execCommand("copy");toast("คัดลอกแล้ว")}catch(x){toast("กดค้างที่ข้อความเพื่อคัดลอก")}})}
+$("#v").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,D=b.dataset;
+  if(a==="mk"){const n=+D.n;save([{d:S.d,p:S.p,n:n,c:g(S.d,S.p)[n]===D.c?"":D.c}]);draw()}
+  else if(a==="chip"){S.p=+D.p;draw()}
+  else if(a==="all"){const it=[];N.forEach((_,i)=>{if(!g(S.d,S.p)[i+1])it.push({d:S.d,p:S.p,n:i+1,c:"p"})});if(it.length)save(it);draw()}
+  else if(a==="clr"){if(!S.arm){S.arm=1;draw();setTimeout(()=>{S.arm=0;if(S.v==="day")draw()},3000);return}S.arm=0;save(Object.keys(g(S.d,S.p)).map(n=>({d:S.d,p:S.p,n:+n,c:""})));draw()}
+  else if(a==="prev"){mv(-1);load()}else if(a==="next"){mv(1);load()}else if(a==="today"){S.d=iso(new Date());pickP();load()}
+  else if(a==="go"){S.d=D.d;S.v="day";pickP();load()}else if(a==="mon"){S.d=D.d;S.v="month";load()}
+  else if(a==="cp")cp();else if(a==="sh"){navigator.share?navigator.share({text:$("#msg").value}).catch(()=>{}):cp()}});
+$("#v").addEventListener("change",e=>{if(e.target.id==="dt"&&e.target.value){S.d=e.target.value;pickP();load()}});
+document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b){S.v=b.dataset.v;load()}});
+setInterval(()=>{if(document.hidden||S.v!=="day"||!CFG.API||pend)return;const b=JSON.stringify(db[S.d]);load(1,()=>JSON.stringify(db[S.d])!==b)},10000);
+sync(CFG.API?"กำลังเชื่อมต่อ…":"โหมดเครื่องเดียว");pickP();load();
+</script>
+</body>
+</html>
